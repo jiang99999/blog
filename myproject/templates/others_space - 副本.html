@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{user.username}}的空间
+{% endblock %}
+    {% block script %}
+        //判断是否关注
+        var status={{status|safe}};
+        if(status=='1')
+        {
+            $("button").after("<p>已关注</p>");
+            $("button").remove();
+            }
+        $(".attend").click(function(){
+            var attend_name =$(".username").text();
+            $.ajax({
+                url:'/attend',
+                dataType: "json",
+                data:{
+                    'user_id':user_id,
+                    'attend_name':attend_name
+                },
+                success:function(){
+                    alert('关注成功！');
+
+                },
+                error:function(){ alert('出错');  },
+                    });
+
+        });
+    {% endblock %}
+    {% block content %}
+        <div>个人中心</div>
+    <img src="{{user.avatar.avatar.url}}" alt="404">
+    <div>
+        <p>用户名:</p>
+        <p class="username">{{user.username}}</p>
+    </div>
+    <div>
+        <p>email:</p>
+        <p class="content">{{user.email}}</p>
+    </div>
+    <div>
+        <p>注册时间:{{user.register_data}}</p>
+    </div>
+    <div>
+        <p>个人签名:</p>
+        <p class="content">{{user.signature}}</p>
+    </div>
+    <div>
+        <p>关注数:{{follower_list_len}}</p>
+    </div>
+    <button class="attend">关注他！</button>
+     {% endblock %}
+<div article>
+    <h>他的文章</h>
+    {% for blog in data %}
+    <div class="paragraph">
+
+        <div1>{{blog.tags}}</div1>
+        <h class={{blog.id}}> {{blog.title}} </h>
+        <div3>{{blog.pub_date}}</div3>
+        <p>{{ blog.content }}</p>
+        <div5>评论区评论区</div5>
+
+    </div>
+    {% endfor %}
+    <div class="pagination">
+        <ul>
+            <li>
+                {% if obj.number == 1 %} {# 判断当前页码是否为第一页，如果为第一页，则禁止点击 #}
+                    <a aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+            {% for num in page_num %}
+                {% if num == obj.number %} {# 判断是否是当前页，如果是则激活高亮显示 #}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if not obj.has_next %} {# 判断是否有下一页，如果没有下一页，则禁止点击 #}
+                    <a aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+        </ul>
+    </div>
+
+</div>

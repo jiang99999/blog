@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的空间</title>
+    <link rel="stylesheet" type="text/css" href="..\static\css\style.css" />
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../static/js/jquery.cookie.js"></script>
+    <script>
+        $(function(){
+
+            $("button").click(function(){
+                var html = '<input type="text">';
+                var Attributes =$(this).attr('class');
+                $(this).siblings(".content").html(html);
+                $(this).siblings(".content").append('<button class="modify">确认</button>');
+                $(".modify").click(function(){
+                    var content = $("input").val();
+                    $.ajax({
+                        url: '/modify_user',
+                        dataType: "json",
+                        data: {
+                            'content':content,
+                            'Attributes':Attributes
+                        },
+                        success: function(data){
+                            $(".modify").remove();
+                            $("input").before(data);
+                            $("input").remove();
+                        },
+                        error: function(){
+                            alert('出错！'); }
+
+                            });//ajax
+                        });//$(".modify").click
+            });//button
+
+        });
+    </script>
+</head>
+<body>
+<div class="background">
+    <div id="container">
+	<div id="banner">
+		<h1><a >我的空间</a></h1>
+	</div>
+
+<div id="center">
+    <p>    我的第一篇博文</p>
+    <div class="content">
+	<!-- begin entry -->
+    <p>博文内容</p>
+		<!-- end comments -->
+        <br clear="all" />
+        <a id="2"></a>
+    </div><!-- end content -->
+    <p>    我的第二篇博文</p>
+    <div class="content">
+	<!-- begin entry -->
+    <p>博文内容</p>
+		<!-- end comments -->
+        <br clear="all" />
+    </div><!-- end content -->
+    <p>    我的第三篇博文</p>
+    <div class="content">
+	<!-- begin entry -->
+    <p>博文内容</p>
+		<!-- end comments -->
+        <br clear="all" />
+        <a id="2"></a>
+    </div><!-- end content -->
+    <p>    我的第四篇博文</p>
+    <div class="content">
+	<!-- begin entry -->
+    <p>博文内容</p>
+		<!-- end comments -->
+        <br clear="all" />
+        <a id="2"></a>
+    </div><!-- end content -->
+</div><!-- end center -->
+
+<div id="right">
+<div class="sidebar">
+    <h2><a ></a>头像</h2>
+    <img src="{{user.avatar.avatar.url}}" alt="404">
+     <p></p>
+
+        <div class="entry">
+            <a id="6"></a>
+            <h2><a ></a>用户名</h2>
+            <p>{{user.username}}</p>
+            <button class="username">修改用户名</button>
+            <p></p>
+        </div>
+	    <!-- end entry -->
+	    <!-- begin comments -->
+         <a id="2"></a>
+		<h2><a id="comments"></a>个性签名</h2>
+        <p class="content">{{user.signature}}</p>
+        <button class="signature">修改个性签名</button>
+         <p></p>
+         <a id="2"></a>
+        <h2>email</h2>
+        <p class="content">{{user.email}}</p>
+        <button class="email">修改您的email</button>
+         <p></p>
+
+
+
+</div><!-- end sidebar -->
+</div><!-- end right -->
+</div><!-- end container -->
+</div>
+
+</body>
+</html>
+
+

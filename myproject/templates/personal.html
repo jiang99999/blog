@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{user.username}}的空间</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <script src="../static/js/jquery-3.6.0.min.js"></script>
+    <script src="../static/js/jquery.cookie.js"></script>
+    <script>
+        $(function(){
+
+            //当该控件发生变化，响应该事件
+            $("#id_file").change(function () {
+                //alert(1)
+                //取到文件对象
+                var file = $("#id_file")[0].files[0]
+                console.log(file);
+                //放到img控件上，借助于filereader 中间的东西，文件阅读器
+                //生成一个文件阅读器对象赋值给filereader
+                var filereader = new FileReader()
+                //把文件读到filereader对象中
+                //读文件需要时间，需要文件读完再去操作img
+                //如果没这一步操作下面不一定变化
+                filereader.readAsDataURL(file);
+                console.log(filereader);
+                filereader.onload = function () {
+                    $("#id_img").attr('src', filereader.result)
+                }
+            });
+
+            $(".img").click(function(){
+                var formData = new FormData();
+                formData.append('img', $("#id_file")[0].files[0]); //添加图片信息的参数
+                var user_id =$.cookie('user_id');
+                formData.append('user_id', user_id); //添加其他参数
+                console.log(formData.get('img'));
+                $.ajax({
+                    url: '/get_photo/',
+                    type: "post",
+                    headers: {'X-CSRFToken': $.cookie('csrftoken')},//记住他！！！！！！
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                success: function (data){ alert('修改成功！');}
+                });
+           });//click
+            $("button").click(function(){
+                var html = '<input type="text">';
+                var Attributes =$(this).attr('class');
+                $(this).siblings(".content").html(html);
+                $(this).siblings(".content").append('<button class="modify">确认</button>');
+                $(".modify").click(function(){
+                    var content = $("input").val();
+                    $.ajax({
+                        url: '/modify_user',
+                        dataType: "json",
+                        data: {
+                            'content':content,
+                            'Attributes':Attributes
+                        },
+                        success: function(data){
+                            $(".modify").remove();
+                            $("input").before(data);
+                            $("input").remove();
+                        },
+                        error: function(){
+                            alert('出错！'); }
+
+                            });//ajax
+                        });//$(".modify").click
+            });//button
+            //读文章
+            $(".paragraph").click(function(){
+            var user_id = $.cookie('user_id');
+            var article_id = $(this).children("p").attr("class");//读出title的id值
+            location.href = "/read/?article_id="+article_id+"&user_id="+user_id;//向地址传参数;
+        });
+
+    });
+
+    </script>
+</head>
+<body>
+<div class="background">
+    <div id="container">
+    <div id="banner">
+		<h1>{{user.username}}的空间</h1>
+        <a href={% url 'home' %}>回到首页</a>
+	</div>
+<div id="center">
+{% for blog in data %}
+    <div class="paragraph">
+    <p class={{blog.id}}>{{blog.title}}</p>
+    <div class="content">
+	<!-- begin entry -->
+    <p>{{ blog.content }}</p>
+
+		<!-- end comments -->
+        <br clear="all" />
+
+    </div><!-- end content -->
+        </div>
+{% endfor %}
+</div><!-- end center -->
+
+
+<div id="right">
+<div class="sidebar">
+    <h2><a ></a>头像</h2>
+    <img src="{{user.avatar.avatar.url}}" style="height:100px;width:100px;"alt="404">
+    <input type="file" name="file" id="id_file">
+    <button class="img" type="submit">提交</button>
+     <p></p>
+
+        <div class="entry">
+            <a id="6"></a>
+            <h2><a ></a>用户名</h2>
+            <p>{{user.username}}</p>
+            <button class="username">修改用户名</button>
+            <p></p>
+        </div>
+	    <!-- end entry -->
+	    <!-- begin comments -->
+         <a id="2"></a>
+		<h2><a id="comments"></a>个性签名</h2>
+        <p class="content">{{user.signature}}</p>
+        <button class="signature">修改个性签名</button>
+         <p></p>
+         <a id="2"></a>
+        <h2>email</h2>
+        <p class="content">{{user.email}}</p>
+        <button class="email">修改您的email</button>
+         <p></p>
+
+
+
+</div><!-- end sidebar -->
+</div><!-- end right -->
+</div><!-- end container -->
+</div>
+
+
+    <div class="pagination">
+        <ul>
+            <li>
+                {% if obj.number == 1 %} {# 判断当前页码是否为第一页，如果为第一页，则禁止点击 #}
+                    <a aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+            {% for num in page_num %}
+                {% if num == obj.number %} {# 判断是否是当前页，如果是则激活高亮显示 #}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if not obj.has_next %} {# 判断是否有下一页，如果没有下一页，则禁止点击 #}
+                    <a aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+        </ul>
+    </div>
+
+
+
+</body>
+</html>

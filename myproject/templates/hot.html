@@ -1,0 +1,127 @@
+<!--这是单行注释-->
+{% extends "base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="../static/css/hot.css">
+{% endblock %}
+
+{% block script %}
+        $(".a1").hover(function(){
+            var article = {{article_content_list.0|safe}};
+            var id = {{article_id_list.0|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a2").hover(function(){
+            var article = {{article_content_list.1|safe}};
+            var id = {{article_id_list.1|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a3").hover(function(){
+            var article = {{article_content_list.2|safe}};
+            var id = {{article_id_list.2|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a4").hover(function(){
+            var article = {{article_content_list.3|safe}};
+            var id = {{article_id_list.3|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a5").hover(function(){
+            var article = {{article_content_list.4|safe}};
+            var id = {{article_id_list.4|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a6").hover(function(){
+            var article ={{article_content_list.5|safe}};
+            var id = {{article_id_list.5|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a7").hover(function(){
+            var article ={{article_content_list.6|safe}};
+            var id = {{article_id_list.6|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        $(".a8").hover(function(){
+            var article ={{article_content_list.7|safe}};
+            var id = {{article_id_list.7|safe}};
+            $.session.set('article_id', id);//将文章信息写入session
+            $("#show").hide();
+            $("#show").text(article);
+            $("#show").fadeIn("slow");
+        },function(){});
+        //点击触发read事件
+        $("#show").click(function(){
+            var user_id = $.cookie('user_id');
+            var article_id = sessionStorage.getItem("article_id");
+            location.href = "/read/?article_id="+article_id+"&"+user_id;//向地址传参数;
+        });
+{% endblock %}
+
+
+{% block content %}
+<div class="top-1">
+    <div class="top-2">最新文章</div>
+</div>
+
+    <div class="div2">
+        <a class ="a1">政治</a>
+        <a class ="a2">文学</a>
+        <a class ="a3">经济</a>
+        <a class ="a4">体育</a>
+        <a class ="a5">娱乐</a>
+        <a class ="a6">科技</a>
+        <a class ="a7">动物</a>
+        <a class ="a8">生活</a>
+    </div>
+        <div class="Guide">
+            <p  id="show"  >鼠标移到左侧显示详情</p>
+        </div>
+    </div>
+    <div>阅读量排行榜</div>
+    <div class="list">
+    <ul class="title">
+        <script>
+            var list={{titlelist|safe}};
+            var len=list.length;
+            id_list=[];
+            for (i=0;i<len;i++)
+            {id_list[i]=i+1;}
+        </script>
+        {% for title in titlelist %}
+        <li>{{id_list}}{{title}}</li>
+
+        {% endfor %}
+    </ul>
+    <ul class="readcount">
+        {% for count in readlist%}
+        <li>阅读数{{count}}</li>
+        {% endfor %}
+    </ul>
+
+    </div>
+{% endblock %}
+
+
+
+
+
