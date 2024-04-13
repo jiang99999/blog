@@ -1,0 +1,105 @@
+
+
+.free{
+    margin:0 auto;
+    width: 1500px;
+    height:300px;
+
+
+    color:white;
+    font-size:100px;
+    text-align:center;
+    line-height:300px;
+}
+
+.title{
+    margin:0 auto;
+    width: 1500px;
+    height:300px;
+    display:block;
+    color:black;
+    font-size:100px;
+    text-align:center;
+    line-height:300px;
+}
+/*内容框及框内样式*/
+.paragraph{
+    margin:0 auto;
+    width: 1000px;
+    height:400px;
+    margin-top:50px;
+    margin-bottom:50px;
+    background-color:#f5f5f5;
+    display:block;
+    color:black;
+    text-decoration:none;
+}
+
+.paragraph div1{
+    margin-top:20px;
+    margin-left:40px;
+    width: 525px;
+    height:36px;
+    display:block;
+
+}
+
+.paragraph h{
+    margin-top:20px;
+    margin-left:40px;
+    width: 1000px;
+    height:50px;
+    padding:10px;
+    font-size:25px;
+    font-family: 'Arial','Microsoft YaHei';
+    font-weight:bold;
+    display:block;
+    line-height:50px;
+
+
+
+
+}
+.paragraph div3{
+    margin-top:20px;
+    margin-left:40px;
+    width: 525px;
+    height: 40px;
+    display:block;
+
+}
+.paragraph p{
+    margin-top:20px;
+    margin-left:40px;
+    width: 800px;
+    height: 85px;
+    padding:10px;
+    display:block;
+
+    font-size:20px;
+    font-family: 'Arial','Microsoft YaHei';
+    text-indent:2em;
+}
+.paragraph div5{
+    float:right;
+    width: 525px;
+    height: 40px;
+}
+/*分页栏格式*/
+
+.pagination ul{
+    text-align: center;
+    text-align:center;
+    width:1000px;
+    margin:0 auto;
+    height:100px;
+    background-color:red;
+}
+li{
+    float:left;
+    margin-left:20px;
+    margin-right:20px;
+    width:200px;
+    list-style:none;
+    line-height:100px;
+}

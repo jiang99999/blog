@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="../static/css/read.css">
+{% endblock %}
+
+{% block script_top %}
+
+{% endblock %}
+
+
+{% block script %}
+    var status={{status|safe}};
+    if(status=='notread')
+        {alert('读入失败！你没有文章浏览记录');}
+    else{
+        $(".send").click(function(){
+
+                var user = $.cookie('user_id');//获取用户id
+                var id = {{article_id_json|safe}};
+                var content = $("#text").val();//获取评论内容
+                console.log('user:',user)
+                console.log('content:',content)
+        $.ajax({
+				url: '/ajax',
+                dataType: "json",
+				data: {
+                    'user_id':user_id,
+                    'content':content,
+                    'id':id
+				},
+				success: function(data){
+                    $(".comment").append(("<p>"+data[1]+"</p>"));
+                    $(".comment").append(("<p>"+data[0]+"</p>"));//不刷新页面写入评论内容
+				},
+				error: function(){
+					alert('出错！')
+				}
+                })
+        });//结束发送评论按键事件
+        //点击作者查看个人空间
+        $(".username").click(function(){
+            var user_id = $(this).children().attr('class');
+            $.ajax({
+				url: '/others_space',
+				data: {
+                    'user_id':user_id,
+				},
+                success: function(data){
+                    location.href="/others_space/?user_id="+user_id;//向地址传参数
+				},
+				error: function(){
+				},
+
+                })
+        });
+        }//结束else
+{% endblock %}
+
+{% block content %}
+    <div class="background">
+            <div id="container">
+	<div id="banner">
+		<h class="title"> {{article.title}} </h>
+	</div>
+
+<div id="center">
+    <div class="content">
+	<!-- begin entry -->
+	    <h2>2009-05-24</h2>
+        <h2>{{article.pub_data}}</h2>
+        <div class="entry">
+            <a id="6"></a>
+            <p>{{ article.title }}</p>
+            <h3>北京与三大运营商签协议 提高宽带接入能力</h3>
+            <p>{{ article.content }}</p>
+            <p>本报讯 (记者 王姝) 前日，北京市政府已与三大基础电信运营商———中国联通、中国移动、中国电信，签订了战略合作框架协议，达成“建设增值应用业务平台”等共识。昨日，北京市政府相关部门透露了这一消息。 <p>　　“战略合作框架协议”共包括五方面内容：提高宽带接入能力，实现城乡一体化；加快3G建设和2G改造，促进移动通信应用；建设增值应用业务平台，大力发展电信增值业务；深化信息化应用，为社会提供丰富、便捷的宽带应用服务；加强产学研合作，促进创业就业，提升全民信息化水平。</p><p>　　工业和信息化部部长李毅中出席了签字仪式，他在致辞中表示，通过信息化基础设施的适度超前建设，北京将带动相关产业发展，同时为未来产业升级、结构调整，预留先机。</p></p>
+		    <p class="posted">09:33 上午  | <a href="#comments">评论</a></p>
+        </div>
+	<!-- end entry -->
+	<!-- begin comments -->
+		<h2><a id="comments"></a>评论（{{comment_count}}）</h2>
+    	    	<a id="2"></a>
+        <p>评论评论评论评论评论评论评论评论评论</p>
+        <p class=posted></p>
+    	    	<a id="1"></a>
+        <p>评论评论评论评论评论评论评论评论评论</p>
+		<p class=posted></p>
+    	    	<a id="1"></a>
+
+        <h2>发表评论</h2>
+        {%for comment in comment_list%}
+        <div>
+            <p class="content">{{comment.content}}</p>
+            <user class="Commentator">{{comment.account}}</user>
+        </div>
+        {%endfor%}
+        <div class="comment"></div>
+
+        <br clear="all" />
+    <div>
+
+            {% csrf_token %}
+            <textarea type="text" id="text" rows=6 cols=50></textarea>
+            <button class="send" value="发送">发送</button>
+
+    </div>
+    <div style="height:100px;"></div>
+
+        <div class="pagination">
+        <ul>
+            <li>
+                {% if obj.number == 1 %} {# 判断当前页码是否为第一页，如果为第一页，则禁止点击 #}
+                    <a aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+            {% for num in page_num %}
+                {% if num == obj.number %} {# 判断是否是当前页，如果是则激活高亮显示 #}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if not obj.has_next %} {# 判断是否有下一页，如果没有下一页，则禁止点击 #}
+                    <a aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+        </ul>
+    </div>
+
+
+    </div><!-- end content -->
+</div><!-- end center -->
+
+
+    <div id="right">
+        <div class="sidebar">
+            <h2><a ></a>头像</h2>
+            <img src="{{user.avatar.avatar.url}}" alt="404">
+            <p></p>
+
+            <div class="entry">
+                <a id="6"></a>
+                <h2><a ></a>用户名</h2>
+                <a class={{article.account.id}} >{{article.account.username}}</a>
+                <p></p>
+
+            </div>
+
+            <a id="2"></a>
+            <div class="entry">
+                <a id="6"></a>
+                <h2><a ></a>标签</h2>
+                <h>标签:</h>
+                {%for tag in tags_list%}
+                <div1>{{tag.name}}</div1>
+                {%endfor%}
+                <p></p>
+            </div>
+
+            <a id="2"></a>
+            <div class="entry">
+                <a id="6"></a>
+                <h2><a ></a>文章阅读数</h2>
+                <h></h>
+                 <h>{{ article.read_count }}</h>
+                <p></p>
+            </div>
+    </div><!-- end right -->
+</div><!-- end container -->
+
+                
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="../static/css/article.css">
+{% endblock %}
+
+{% block script %}
+    var status = {{status|safe}};
+    if(status=="logined")
+        {var x= {{json|safe}};
+        $(".paragraph").click(function(){
+            var user_id = $.cookie('user_id');
+            var article_id = $(this).children("h").attr("class");//读出title的id值
+            location.href = "/read/?article_id="+article_id+"&user_id="+user_id;//向地址传参数;
+        });
+        }
+    else
+        {alert('您还未登录，请先登录');
+        location.href = "/login";}
+
+{% endblock %}
+
+{% block content %}
+        <div class="free"></div>
+        <div class="free">我的博客</div>
+{% endblock %}
+
+{% block content2 %}
+    <div class="title">我的文章</div>
+    {% for blog in data %}
+    <div class="paragraph">
+
+        <div1>{{blog.tags}}</div1>
+        <h class={{blog.id}}> {{blog.title}} </h>
+        <div3>{{blog.pub_date}}</div3>
+        <p>{{ blog.content }}</p>
+        <div5>评论区评论区</div5>
+
+    </div>
+    {% endfor %}
+    <div class="pagination">
+        <ul>
+            <li>
+                {% if obj.number == 1 %} {# 判断当前页码是否为第一页，如果为第一页，则禁止点击 #}
+                    <a aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+            {% for num in page_num %}
+                {% if num == obj.number %} {# 判断是否是当前页，如果是则激活高亮显示 #}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if not obj.has_next %} {# 判断是否有下一页，如果没有下一页，则禁止点击 #}
+                    <a aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <a href="?page={{ obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% endif %}
+
+            </li>
+        </ul>
+    </div>
+
+
+
+{% endblock %}
