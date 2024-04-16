@@ -37,7 +37,7 @@
                 $.ajax({
                     url: '/get_photo/',
                     type: "post",
-                    headers: {'X-CSRFToken': $.cookie('csrftoken')},//记住他！！！！！！
+                    headers: {'X-CSRFToken': $.cookie('csrftoken')},
                     data: formData,
                     processData: false,
                     contentType: false,
